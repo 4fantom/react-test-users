@@ -12,7 +12,7 @@ export const UsersClient = axios.create({
   },
 });
 
-const useFetch = (method, link, body = {}) => {
+const useFetch = (link, body = {}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiData, setApiData] = useState(null);
   const [apiError, setApiError] = useState(null);
@@ -21,15 +21,8 @@ const useFetch = (method, link, body = {}) => {
     setIsLoading(true);
     const fetchData = async () => {
       try {
-        if (method === "GET") {
-          const { data } = await UsersClient.get(`/`);
-          setApiData(data);
-        } else if (method === "PUT") {
-          const { data } = await UsersClient.put(link, {
-            ...body,
-          });
-          setApiData(data);
-        }
+        const { data } = await UsersClient.get(link, body);
+        setApiData(data);
         setIsLoading(false);
       } catch (error) {
         setApiError(error);
@@ -38,6 +31,7 @@ const useFetch = (method, link, body = {}) => {
     };
 
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   return { isLoading, apiData, apiError };

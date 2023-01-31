@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress, Box, Paper } from "@mui/material";
+import { CircularProgress, Box } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,7 +15,7 @@ const Users = () => {
   const [gender, setGender] = useState("");
   const [users, setUsers] = useState(null);
 
-  const { isLoading, apiError, apiData } = useFetch("GET", "/");
+  const { isLoading, apiError, apiData } = useFetch("/");
 
   if (apiError) {
     toast.error(apiError.message);
