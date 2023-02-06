@@ -1,28 +1,28 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-const AUTH_TOKEN =
-  "Bearer 907ab48240dc59db6ca0cb99783470eb5ddd6e77823b0727c798969003e6900c";
+import { AUTH_TOKEN, USERS_URL } from "../constants";
 
 export const UsersClient = axios.create({
-  baseURL: "https://gorest.co.in/public/v2/users",
+  baseURL: USERS_URL,
   headers: {
     Accept: "application/json",
     Authorization: AUTH_TOKEN,
   },
 });
 
-const useFetch = (link, body = {}) => {
+const useFetch = (link, body = {}, refetchDeps = []) => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiData, setApiData] = useState(null);
+  const [headers, setHeaders] = useState(null);
   const [apiError, setApiError] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
       try {
-        const { data } = await UsersClient.get(link, body);
+        const { data, headers } = await UsersClient.get(link, body);
         setApiData(data);
+        setHeaders(headers);
         setIsLoading(false);
       } catch (error) {
         setApiError(error);
@@ -32,9 +32,9 @@ const useFetch = (link, body = {}) => {
 
     fetchData();
     // eslint-disable-next-line
-  }, []);
+  }, [...refetchDeps]);
 
-  return { isLoading, apiData, apiError };
+  return { isLoading, apiData, apiError, headers };
 };
 
 export default useFetch;

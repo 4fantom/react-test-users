@@ -14,8 +14,21 @@ const Users = () => {
   const navigate = useNavigate();
   const [gender, setGender] = useState("");
   const [users, setUsers] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { isLoading, apiError, apiData } = useFetch("/");
+  const { isLoading, apiError, apiData, headers } = useFetch(
+    "/",
+    {
+      params: {
+        gender: gender,
+        page: page,
+        per_page: rowsPerPage,
+      },
+    },
+    [page, rowsPerPage, gender]
+  );
 
   if (apiError) {
     toast.error(apiError.message);
@@ -27,10 +40,12 @@ const Users = () => {
         ? apiData.filter((user) => user.gender === gender)
         : apiData;
       setUsers(filteredUsers);
+      setTotalAmount(headers["x-pagination-total"]);
     }
   }, [apiData, gender]);
 
   const handleSelectChange = (e) => {
+    setPage(0);
     setGender(e.target.value);
   };
 
@@ -50,7 +65,15 @@ const Users = () => {
               handleChange={handleSelectChange}
               menuItems={selectGenderItems}
             />
-            <BasicTable rows={users} onRowClick={handleRowClick} />
+            <BasicTable
+              rows={users}
+              onRowClick={handleRowClick}
+              page={page}
+              setPage={setPage}
+              rowsPerPage={rowsPerPage}
+              setRowsPerPage={setRowsPerPage}
+              totalAmount={totalAmount}
+            />
           </Box>
         </div>
       )}

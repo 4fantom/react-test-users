@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Table,
   TableBody,
@@ -10,10 +10,15 @@ import {
   Paper,
 } from "@mui/material";
 
-const BasicTable = ({ rows, onRowClick }) => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
+const BasicTable = ({
+  rows,
+  onRowClick,
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  totalAmount,
+}) => {
   const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
@@ -42,24 +47,22 @@ const BasicTable = ({ rows, onRowClick }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow key={row.id} onClick={() => onRowClick(row)}>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.email}</TableCell>
-                  <TableCell align="right">{row.gender}</TableCell>
-                  <TableCell align="right">{row.status}</TableCell>
-                </TableRow>
-              ))}
+            {rows.map((row) => (
+              <TableRow key={row.id} onClick={() => onRowClick(row)}>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell align="right">{row.email}</TableCell>
+                <TableCell align="right">{row.gender}</TableCell>
+                <TableCell align="right">{row.status}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={totalAmount}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
